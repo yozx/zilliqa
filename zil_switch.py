@@ -44,9 +44,9 @@ ZIL_FILENAME = 'run.bat'
 OTHER_FILENAME = 'run.bat'  # TODO Replace with sys.args
 PATH_ZILLIQA = cwd + '/zilliqa/'
 PATH_OTHER = cwd + '/other/'
-TIMEOUT = 15  # Time to switch back from Zilliqa, default 15 mi
+TIMEOUT = 15 * 2  # Time to switch back from Zilliqa. Default 15 min.
 START = time()
-SLEEP = 30  # time between block check
+SLEEP = 60 / 2  # Idle time between block checking in sec. Default 30 sec.
 
 
 def get_data():
@@ -76,7 +76,7 @@ def get_data():
 
 def get_current_user_processes():
     """
-    Needed to convert shitty tasklist format to plain rows
+    Converts useless tasklist format to plain rows
     :return: dict of currently fetched processes
     """
     csv_output = subprocess.check_output(["tasklist", "/FI", "USERNAME eq {}".format(os.getenv("USERNAME")),
@@ -87,6 +87,9 @@ def get_current_user_processes():
 
 
 def kill(tasks):
+    """
+    Killing all processes and child process too
+    """
     for name, pid in tasks.items():
         print(name, pid)
         try:
